@@ -2,30 +2,30 @@
   <div class="addBrand-container">
     <div class="container">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="180px">
-        <el-form-item label="账号" prop="username">
+        <el-form-item label="Username" prop="username">
           <el-input v-model="ruleForm.username"></el-input>
         </el-form-item>
-        <el-form-item label="员工姓名" prop="name">
+        <el-form-item label="Employee Name" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="Phone" prop="phone">
           <el-input v-model="ruleForm.phone"></el-input>
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
-            <el-radio v-model="ruleForm.sex" label="1">男</el-radio>
-            <el-radio v-model="ruleForm.sex" label="2">女</el-radio>
+        <el-form-item label="Sex" prop="sex">
+            <el-radio v-model="ruleForm.sex" label="1">Male</el-radio>
+            <el-radio v-model="ruleForm.sex" label="2">Female</el-radio>
         </el-form-item>
-        <el-form-item label="身份证号" prop="idNumber">
+        <el-form-item label="Id Number" prop="idNumber">
           <el-input v-model="ruleForm.idNumber"></el-input>
         </el-form-item>
         <div class="subBox">
-          <el-button type="primary" @click="submitForm('ruleForm',false)">保存</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm',false)">Save</el-button>
           <el-button 
             v-if="this.optType === 'add'" 
             type="primary" 
-            @click="submitForm('ruleForm',true)">保存并继续添加员工
+            @click="submitForm('ruleForm',true)">Save And Continue
           </el-button>
-          <el-button @click="() => this.$router.push('/employee')">返回</el-button>
+          <el-button @click="() => this.$router.push('/employee')">Return</el-button>
         </div>
       </el-form>
     </div>
@@ -33,8 +33,75 @@
 </template>
 
 <script lang="ts">
+import {addEmployee} from '@/api/employee'
 
 export default {
+  data() {
+    return {
+      optType: 'add', 
+      ruleForm: {
+        name: '', 
+        username: '', 
+        sex: '1', 
+        phone: '', 
+        idNumber: ''
+      }, 
+      rules: {
+        name: [
+            { required: true, message: 'Please enter employee name', trigger: 'blur' }
+        ],
+        username: [
+            { required: true, message: 'Please enter employee username', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if(value === '' || (!/^1(3|4|5|6|7|8)\d{9}$/.test(value))){
+              callback(new Error('Please enter a correct phone number!'))
+            } else {
+              callback()
+            }
+          }}
+        ], 
+        idNumber: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if(value === '' || (!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(x|X)$)/.test(value))){
+              callback(new Error('Please enter a correct id number!'))
+            } else {
+              callback()
+            }
+          }}
+        ]
+      }
+    }
+  }, 
+  methods: {
+    submitForm(formName, isContinue) {
+      //check the form valid or not 
+      this.$refs[formName].validate((valid) => {
+        if(valid) {
+          //send ajax request to submit data to backend 
+          addEmployee(this.ruleForm).then((res) => {
+            if(res.data.code === 1) {
+              this.$message.success('Added Employee Successfully!')
+              if(isContinue) {
+                this.ruleForm = {
+                  name: '', 
+                  username: '', 
+                  sex: '1', 
+                  phone: '', 
+                  idNumber: ''
+                }
+              } else {
+                this.$router.push('/employee')
+              }
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+        }
+      })
+    }
+  }
   
 }
 </script>

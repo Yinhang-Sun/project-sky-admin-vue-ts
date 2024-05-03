@@ -27,3 +27,19 @@ export const getEmployeeList = (params: any) =>
     'method': 'get',
     'params': params
   })
+
+//enable or disable employee account 
+export const enableOrDisableEmployee = (params: any) =>
+  request({
+    'url': `/employee/status/${params.status}`,
+    'method': 'post',
+    'params': {id:params.id}
+  })
+
+  //add employee 
+export const addEmployee = (params: any) =>
+  request({
+    'url': '/employee',
+    'method': 'post',
+    'data': params
+  })

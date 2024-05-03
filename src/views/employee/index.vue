@@ -11,7 +11,7 @@
         <el-button type="primary" style="margin-left: 25px" @click="pageQuery()"
           >Query</el-button
         >
-        <el-button type="primary" style="float: right">+Add Employee</el-button>
+        <el-button type="primary" style="float: right" @click="handleAddEmp">+Add Employee</el-button>
       </div>
       <el-table :data="records" stripe style="width: 100%">
         <el-table-column prop="name" label="Employee Name" width="180">
@@ -29,7 +29,7 @@
         <el-table-column label="Operation">
           <template slot-scope="scope">
             <el-button type="text">Edit</el-button>
-            <el-button type="text">{{
+            <el-button type="text" @click="handleEnableOrDisable(scope.row)">{{
               scope.row.status === 1 ? 'Disable' : 'Enable'
             }}</el-button>
           </template>
@@ -50,7 +50,8 @@
   </div>
 </template>
 <script lang="ts">
-import { getEmployeeList } from '@/api/employee'
+import { getEmployeeList, enableOrDisableEmployee } from '@/api/employee'
+import { Row } from 'element-ui'
 
 export default {
   //model data
@@ -97,6 +98,43 @@ export default {
       this.page = page
       this.pageQuery()
     },
+    //handle enable or disable an account
+    handleEnableOrDisable(row) {
+      if(row.username === 'admin') {
+        this.$message.error('admin is the administator account, it cannot be edit!')
+        return
+      }
+      //alert(`id=${row.id} status=${row.status}`)
+
+      //pop the confirm box
+      this.$confirm(
+        'Are you sure you want to edit the account status?',
+        'prompt',
+        {
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        }
+      ).then(() => {
+        const p = {
+          id: row.id,
+          status: !row.status ? 1 : 0,
+        }
+
+        enableOrDisableEmployee(p).then((res) => {
+          if (res.data.code === 1) {
+            this.$message.success(
+              'Employee account status edited successfully!'
+            )
+            this.pageQuery()
+          }
+        })
+      })
+    },
+    //jump to add employee view(component) 
+    handleAddEmp() {
+      this.$router.push('/employee/add')
+    }
   },
 }
 </script>
