@@ -57,7 +57,7 @@ export default {
   //model data
   data() {
     return {
-      name: '',
+      name: '',//employee name 
       page: 1,
       pageSize: 10,
       total: 0,
