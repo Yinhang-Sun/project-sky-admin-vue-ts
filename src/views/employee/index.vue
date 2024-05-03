@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column label="Operation">
           <template slot-scope="scope">
-            <el-button type="text">Edit</el-button>
+            <el-button type="text" @click="handleUpdateEmp(scope.row)">Edit</el-button>
             <el-button type="text" @click="handleEnableOrDisable(scope.row)">{{
               scope.row.status === 1 ? 'Disable' : 'Enable'
             }}</el-button>
@@ -134,6 +134,17 @@ export default {
     //jump to add employee view(component) 
     handleAddEmp() {
       this.$router.push('/employee/add')
+    }, 
+    //jump to update employee view(component) 
+    handleUpdateEmp(row) {
+      if(row.username === 'admin') {
+        this.$message.error('admin is the administrator, and can not be edited!')
+        return
+      }
+      this.$router.push({
+        path: '/employee/add', 
+        query: {id: row.id}
+      })
     }
   },
 }

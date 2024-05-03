@@ -36,10 +36,25 @@ export const enableOrDisableEmployee = (params: any) =>
     'params': {id:params.id}
   })
 
-  //add employee 
+//add employee 
 export const addEmployee = (params: any) =>
   request({
     'url': '/employee',
     'method': 'post',
+    'data': params
+  })
+
+//get employee by id
+export const queryEmployeeById = (id: number) =>
+  request({
+    'url': `/employee/${id}`,
+    'method': 'get',
+  })
+
+//update employee 
+export const updateEmployee = (params: any) =>
+  request({
+    'url': '/employee',
+    'method': 'put',
     'data': params
   })
