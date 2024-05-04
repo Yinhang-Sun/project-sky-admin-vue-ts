@@ -38,7 +38,7 @@
           <el-button type="danger" @click="handleDelete('b')"
             >Delete In Batches</el-button
           >
-          <el-button type="info">+Add Setmeal</el-button>
+          <el-button type="info" @click="() => this.$router.push('/setmeal/add')">+Add Setmeal</el-button>
         </div>
       </div>
     </div>
