@@ -223,7 +223,7 @@ export default class extends Vue {
       },
       price: {
         required: true,
-        // 'message': '请输入套餐价格', test
+        // 'message': '请输入套餐价格'
         validator: (rules: any, value: string, callback: Function) => {
           const reg = /^([1-9]\d{0,5}|0)(\.\d{1,2})?$/
           if (!reg.test(value) || Number(value) <= 0) {
