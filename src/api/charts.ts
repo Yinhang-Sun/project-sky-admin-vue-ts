@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 /**
  *
- * 报表数据
+ * 报表数据管理
  *
  **/
 
